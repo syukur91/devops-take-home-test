@@ -1,0 +1,23 @@
+{
+  "name": "docker-training",
+  "version": "1.0.0",
+  "description": "docker simulation for training",
+  "main": "app.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.6.1",
+    "express": "^4.16.2",
+    "node-env-file": "^0.1.8",
+    "pg": "^7.6.0",
+    "pg-pool": "^2.0.3",
+    "redis": "^2.8.0",
+    "request": "^2.88.0",
+    "uuid": "^3.3.2",
+    "fs": "0.0.1-security",
+    "ip": "^1.1.5"
+  }
+}

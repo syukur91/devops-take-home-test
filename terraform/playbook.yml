@@ -1,0 +1,69 @@
+- hosts: web 
+  gather_facts: no
+  become: yes
+  remote_user: ec2-user
+  tasks:
+   - name: Install a list of packages
+     yum:
+      name:
+        - nginx
+      state: present
+
+   - name: Start service nginx, if not started
+     service:
+      name: nginx
+      state: started
+
+   - name: update package
+     command: sudo yum update -y
+
+   - name: install docker
+     command: sudo yum install -y docker
+
+   - name: apply user docker
+     command: sudo usermod -aG docker ec2-user
+   
+   - name: download docker-compose
+     command: wget https://github.com/docker/compose/releases/download/1.19.0/docker-compose-Linux-x86_64 
+
+   - name: copy docker-compose
+     command: sudo mv docker-compose-Linux-x86_64 /usr/local/bin/docker-compose
+
+   - name: put docker-compose
+     command: sudo chmod +x /usr/local/bin/docker-compose
+   
+   - name: start docker
+     command: sudo service docker start
+
+   - name: Copying Compose File
+     copy:
+       src:  ./docker-compose.yml
+       dest: /tmp/docker-compose.yml
+       force: yes
+
+   - name: Synchronization of src on the control machine to dest on the remote hosts
+     synchronize:
+       src: ./app
+       dest: /tmp
+     
+   - name: Run service
+     shell: /usr/local/bin/docker-compose -f /tmp/docker-compose.yml up -d  
+
+   - name: Copying New Nginx Config
+     copy:
+       src:  ./nginx.conf
+       dest: /etc/nginx/nginx.conf
+       force: yes
+
+   - name: Copying New Nginx Upstream Config
+     copy:
+       src:  ./virtual.conf
+       dest: /etc/nginx/conf.d/virtual.conf
+       force: yes
+
+   - name: restart nginx
+     service:
+      name: nginx
+      state: restarted
+
+  

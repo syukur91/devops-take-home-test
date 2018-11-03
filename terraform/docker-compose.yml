@@ -1,0 +1,64 @@
+version: '3'
+services:
+  postgres:
+    container_name: "devops_postgres"
+    image: postgres:10-alpine
+    ports:
+      - "5945:5432"
+    environment:
+      - POSTGRES_PASSWORD=mypostgres
+    restart: always
+  redis:
+    container_name: "devops_redis"
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    restart: always
+  app_1:
+    build: ./app
+    image: node_apps:1.0
+    container_name: "devops_apps"
+    environment:
+      - POSTGRES_HOST=postgresql
+      - POSTGRES_PORT=5432
+      - REDIS_HOST=cache
+    links:
+      - postgres:postgresql
+      - redis:cache
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "3004:3004"
+  app_2:
+    build: ./app
+    image: node_apps:1.0
+    container_name: "devops_apps_2"
+    environment:
+      - POSTGRES_HOST=postgresql
+      - POSTGRES_PORT=5432
+      - REDIS_HOST=cache
+    links:
+      - postgres:postgresql
+      - redis:cache
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "3005:3004"
+  app_3:
+    build: ./app
+    image: node_apps:1.0
+    container_name: "devops_apps_3"
+    environment:
+      - POSTGRES_HOST=postgresql
+      - POSTGRES_PORT=5432
+      - REDIS_HOST=cache
+    links:
+      - postgres:postgresql
+      - redis:cache
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "3006:3004"

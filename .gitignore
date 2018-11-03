@@ -1,0 +1,7 @@
+.terraform
+*.tfstate
+*.tfstate.backup
+*.retry
+.terraform.tfstate.*
+node_modules
+package-lock.json
